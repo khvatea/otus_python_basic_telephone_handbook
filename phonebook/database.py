@@ -13,6 +13,10 @@ class Database:
         self.contacts = []
 
     def open(self):
+        """
+        Open a directory from JSON and upload it to a List object
+        :return:
+        """
         # Open file, read and pass to list object
         with open(self.file, "r", encoding='utf8') as stream:
             handbook_json = json.load(stream)
@@ -32,5 +36,8 @@ class Database:
 
 
     def close(self):
+        """
+        Close the directory and delete the buffer
+        """
         if pathlib.Path(self.file_buff).exists():
             pathlib.Path(self.file_buff).unlink()

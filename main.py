@@ -11,11 +11,11 @@ def main():
         print("\n\n##############################")
         menu_items = menu.show(menu_return_point)
 
-        # Show menu
+        # Show (sub)menu
         for key, value in menu_items.items():
             print(f"{key}. {value[0]}")
 
-        # Select action
+        # Select action and evaluate
         menu_user_choice = input("Введите номер действия: ")
         menu_return_point = eval(f"menu.{menu_items[int(menu_user_choice)][1]}")
 

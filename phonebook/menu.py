@@ -6,6 +6,10 @@ import sys
 class Menu:
 
     def __init__(self, handbook: Handbook):
+        """
+        Console menu for displaying and interacting with the telephone directory
+        :param handbook: list of handbook entries
+        """
         self.handbook = handbook
 
 
@@ -24,7 +28,7 @@ class Menu:
         ]
         :param sort_by_field: Table sort field
         :param contacts: Contact list
-        :return: Return string representation of table in current state
+        :return: Return string representation of pretty table in current state
         """
         pretty_table = PrettyTable()
 
@@ -44,7 +48,8 @@ class Menu:
         """
         Main menu of the handbook
         :param point: Menu item number
-        :return:
+        :return:    Menu points in dictionary format with the value of a tuple of two elements.
+                    The first element is the name of the menu item, the second is the name of the called function.
         """
         start_points = {1: ("Открыть справочник",    "item_open_handbook()"),
                         2: ("Выйти",                 "item_close_handbook()")}
@@ -72,20 +77,36 @@ class Menu:
 
 
     def item_open_handbook(self):
+        """
+        Menu item selected: "Открыть справочник"
+        :return: Menu section number to go to
+        """
         self.handbook.open()
         return 0
 
 
     def item_print_handbook(self):
+        """
+        Menu item selected: "Показать все контакты"
+        :return: Menu section number to go to
+        """
         return 2
 
 
     def item_sorted_handbook(self, sorted_by_field: str):
+        """
+        Menu item selected: "Сортировать по имени (адресу, телефону)"
+        :return: Menu section number to go to
+        """
         print(self.show_pretty_table(sorted_by_field, self.handbook.contacts))
         return 0
 
 
     def item_diff_handbook(self):
+        """
+        Menu item selected: "Показать изменения"
+        :return: Menu section number to go to
+        """
         contacts_diff = self.handbook.compare()
 
         if not contacts_diff:
@@ -97,6 +118,10 @@ class Menu:
 
 
     def item_add_row(self):
+        """
+        Menu item selected: "Создать контакт"
+        :return: Menu section number to go to
+        """
         new_contact = {"name": "undefined", "phone": "undefined", "email": "undefined", "address": "undefined"}
 
         print("\nЗаполните поля нового контакта")
@@ -108,6 +133,10 @@ class Menu:
 
 
     def item_save_handbook(self):
+        """
+        Menu item selected: "Сохранить справочник"
+        :return: Menu section number to go to
+        """
         contacts_diff = self.handbook.compare()
 
         if not contacts_diff:
@@ -122,12 +151,20 @@ class Menu:
 
 
     def item_find_rows(self):
+        """
+        Menu item selected: "Найти контакт"
+        :return: Menu section number to go to
+        """
         find_contacts = self.handbook.find_rows(input("\nКого найти?: "))
         print(self.show_pretty_table(contacts=find_contacts))
 
         return 0
 
     def item_update_row(self):
+        """
+        Menu item selected: "Обновить контакт"
+        :return: Menu section number to go to
+        """
         contact = input("\nВведите полное имя контакта: ")
         find_contacts = self.handbook.find_rows(contact)
 
@@ -146,6 +183,10 @@ class Menu:
 
 
     def item_delete_row(self):
+        """
+        Menu item selected: "Удалить контакт"
+        :return: Menu section number to go to
+        """
         contact = input("\nВведите полное имя контакта для удаления: ")
 
         register = self.handbook.delete_row(contact)
@@ -161,6 +202,10 @@ class Menu:
 
 
     def item_close_handbook(self):
+        """
+        Menu item selected: "Выйти"
+        :return: Menu section number to go to
+        """
         if self.handbook.contacts:
             self.item_save_handbook()
         self.handbook.close()
