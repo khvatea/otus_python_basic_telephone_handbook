@@ -1,4 +1,5 @@
 from .handbook import Handbook
+from prettytable import PrettyTable
 import sys
 
 
@@ -6,6 +7,37 @@ class Menu:
 
     def __init__(self, handbook: Handbook):
         self.handbook = handbook
+
+
+    @staticmethod
+    def show_pretty_table(sort_by_field="name", contacts=[]) -> str:
+        """
+        Get all handbook entries sorted by the selected field (by default, sorting will be done by the 'name' field)
+        The list should be presented as follows:
+        [
+            {
+                "name": "Ivan Ivanov",
+                "phone": "+7 111 111-11-11",
+                "email": "ivan.ivanov@example.com",
+                "address": "Moscow, st. Lenina, 1"
+            }
+        ]
+        :param sort_by_field: Table sort field
+        :param contacts: Contact list
+        :return: Return string representation of table in current state
+        """
+        pretty_table = PrettyTable()
+
+        # set table field names
+        pretty_table.field_names = ["name", "phone", "email", "address"]
+        pretty_table.align["name"] = "l"
+        pretty_table.align["address"] = "l"
+
+        # place all lines from the dictionary into a table
+        for contact in contacts:
+            pretty_table.add_row(list(contact.values()))
+
+        return pretty_table.get_string(sortby=sort_by_field)
 
 
     def show(self, point: int) -> dict:
@@ -49,7 +81,7 @@ class Menu:
 
 
     def item_sorted_handbook(self, sorted_by_field: str):
-        print(self.handbook.show_pretty_table(sorted_by_field, self.handbook.contacts))
+        print(self.show_pretty_table(sorted_by_field, self.handbook.contacts))
         return 0
 
 
@@ -91,7 +123,7 @@ class Menu:
 
     def item_find_rows(self):
         find_contacts = self.handbook.find_rows(input("\nКого найти?: "))
-        print(self.handbook.show_pretty_table(contacts=find_contacts))
+        print(self.show_pretty_table(contacts=find_contacts))
 
         return 0
 
@@ -129,6 +161,8 @@ class Menu:
 
 
     def item_close_handbook(self):
-        self.item_save_handbook()
+        if self.handbook.contacts:
+            self.item_save_handbook()
         self.handbook.close()
+        print("Выход...")
         exit(0)

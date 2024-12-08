@@ -1,39 +1,9 @@
 from .database import Database
-from prettytable import PrettyTable
+import difflib
+import json
 
 
 class Handbook(Database):
-
-    @staticmethod
-    def show_pretty_table(sort_by_field="name", contacts=[]) -> str:
-        """
-        Get all handbook entries sorted by the selected field (by default, sorting will be done by the 'name' field)
-        The list should be presented as follows:
-        [
-            {
-                "name": "Ivan Ivanov",
-                "phone": "+7 111 111-11-11",
-                "email": "ivan.ivanov@example.com",
-                "address": "Moscow, st. Lenina, 1"
-            }
-        ]
-        :param sort_by_field: Table sort field
-        :param contacts: Contact list
-        :return: Return string representation of table in current state
-        """
-        pretty_table = PrettyTable()
-
-        # set table field names
-        pretty_table.field_names = ["name", "phone", "email", "address"]
-        pretty_table.align["name"] = "l"
-        pretty_table.align["address"] = "l"
-
-        # place all lines from the dictionary into a table
-        for contact in contacts:
-            pretty_table.add_row(list(contact.values()))
-
-        return pretty_table.get_string(sortby=sort_by_field)
-
 
     def add_row(self, new_contact: dict):
         """
@@ -41,23 +11,7 @@ class Handbook(Database):
         :param new_contact: New contact in dict format
         :return:
         """
-        expected_field_names = {"name", "phone", "email", "address"}
-
-        if isinstance(new_contact, dict):
-            missing_keys = expected_field_names - new_contact.keys()
-            extra_keys = new_contact.keys() - expected_field_names
-
-            if missing_keys:
-                print(f"Ошибка при записи контакта. Отсутствуют ключи: {missing_keys}")
-            elif extra_keys:
-                print(f"Ошибка при записи контакта. Лишние ключи: {extra_keys}")
-            else:
-                self.contacts.append(new_contact)
-        else:
-            print(f"""
-            В функции передан: {type(new_contact)}
-            Требуется dict
-            """)
+        self.contacts.append(new_contact)
 
 
     def find_rows(self, search_string: str, find_by_field="name") -> list:
@@ -94,4 +48,34 @@ class Handbook(Database):
             if contact["name"] == name:
                 self.contacts.remove(contact)
                 return contact
-        return None
+
+
+    def compare(self) -> list:
+        """
+        Comparison of the handbook before and after the change
+        :return: List of changes
+        """
+        # Read the original handbook file
+        with open(self.file, "r", encoding='utf8') as origin:
+            source_json = json.load(origin)
+
+        # Saving intermediate changes to a handbook buffer
+        with open(self.file_buff, "w", encoding='utf8') as buffer:
+            json.dump(self.contacts, buffer, ensure_ascii=False, indent=4)
+        # Reread the stream from the beginning of the file
+        with open(self.file_buff, "r", encoding='utf8') as buffer:
+            source_buffer = json.load(buffer)
+
+        ret = []
+        before = [str(row) for row in source_json]
+        after = [str(row) for row in source_buffer]
+        difflist = difflib.ndiff(before, after)
+
+        for line in difflist:
+            if line.startswith(u'+'):
+                ret.append("\033[3m\033[32m{}\033[0m\n".format(line))
+            elif line.startswith(u'-'):
+                ret.append("\033[3m\033[31m{}\033[0m\n".format(line))
+            elif line.startswith(u'?'):
+                ret.append("{}".format(line))
+        return ret

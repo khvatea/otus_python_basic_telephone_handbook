@@ -1,5 +1,4 @@
 import json
-import difflib
 import pathlib
 
 class Database:
@@ -31,38 +30,7 @@ class Database:
         with open(self.file, "w", encoding='utf8') as stream:
             json.dump(self.contacts, stream, ensure_ascii=False, indent=4)
 
-    def compare(self) -> list:
-        """
-        Comparison of the handbook before and after the change
-        :return: List of changes
-        """
-        # Read the original handbook file
-        with open(self.file, "r", encoding='utf8') as origin:
-            source_json = json.load(origin)
-
-        # Saving intermediate changes to a handbook buffer
-        with open(self.file_buff, "w", encoding='utf8') as buffer:
-            json.dump(self.contacts, buffer, ensure_ascii=False, indent=4)
-        # Reread the stream from the beginning of the file
-        with open(self.file_buff, "r", encoding='utf8') as buffer:
-            source_buffer = json.load(buffer)
-
-        ret = []
-        before = [str(row) for row in source_json]
-        after = [str(row) for row in source_buffer]
-        difflist = difflib.ndiff(before, after)
-
-        for line in difflist:
-            if line.startswith(u'+'):
-                ret.append("\033[3m\033[32m{}\033[0m\n".format(line))
-            elif line.startswith(u'-'):
-                ret.append("\033[3m\033[31m{}\033[0m\n".format(line))
-            elif line.startswith(u'?'):
-                ret.append("{}".format(line))
-        return ret
 
     def close(self):
-        # if os.path.exists(self.file_buff):
         if pathlib.Path(self.file_buff).exists():
             pathlib.Path(self.file_buff).unlink()
-        print("Выход...")

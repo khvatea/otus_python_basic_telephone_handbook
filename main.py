@@ -1,7 +1,6 @@
 from phonebook import Handbook
 from phonebook import Menu
 
-print({key:value for key, value in globals().items() if not key.startswith("__")})
 
 def main():
     handbook = Handbook("sources/handbook.json")
