@@ -2,6 +2,8 @@ import json
 import pathlib
 
 class Database:
+    """Adapter for working with handbook database entries in JSON file format"""
+
     def __init__(self, file: str):
         """
          Init and Open phone book from file.
@@ -33,7 +35,6 @@ class Database:
         """
         with open(self.file, "w", encoding='utf8') as stream:
             json.dump(self.contacts, stream, ensure_ascii=False, indent=4)
-
 
     def close(self):
         """

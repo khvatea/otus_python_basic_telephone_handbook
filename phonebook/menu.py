@@ -4,6 +4,7 @@ import sys
 
 
 class Menu:
+    """Console menu for interacting with the handbook"""
 
     def __init__(self, handbook: Handbook):
         """
@@ -11,7 +12,6 @@ class Menu:
         :param handbook: list of handbook entries
         """
         self.handbook = handbook
-
 
     @staticmethod
     def show_pretty_table(sort_by_field="name", contacts=[]) -> str:
@@ -42,7 +42,6 @@ class Menu:
             pretty_table.add_row(list(contact.values()))
 
         return pretty_table.get_string(sortby=sort_by_field)
-
 
     def show(self, point: int) -> dict:
         """
@@ -75,7 +74,6 @@ class Menu:
             else:
                 return full_points
 
-
     def item_open_handbook(self):
         """
         Menu item selected: "Открыть справочник"
@@ -84,14 +82,12 @@ class Menu:
         self.handbook.open()
         return 0
 
-
     def item_print_handbook(self):
         """
         Menu item selected: "Показать все контакты"
         :return: Menu section number to go to
         """
         return 2
-
 
     def item_sorted_handbook(self, sorted_by_field: str):
         """
@@ -100,7 +96,6 @@ class Menu:
         """
         print(self.show_pretty_table(sorted_by_field, self.handbook.contacts))
         return 0
-
 
     def item_diff_handbook(self):
         """
@@ -116,7 +111,6 @@ class Menu:
 
         return 0
 
-
     def item_add_row(self):
         """
         Menu item selected: "Создать контакт"
@@ -130,7 +124,6 @@ class Menu:
         self.handbook.add_row(new_contact)
 
         return 0
-
 
     def item_save_handbook(self):
         """
@@ -148,7 +141,6 @@ class Menu:
                 self.handbook.save()
 
         return 0
-
 
     def item_find_rows(self):
         """
@@ -181,7 +173,6 @@ class Menu:
 
         return 0
 
-
     def item_delete_row(self):
         """
         Menu item selected: "Удалить контакт"
@@ -199,7 +190,6 @@ class Menu:
                         Воспользуйтесь поиском по контактам.
                         """)
         return 0
-
 
     def item_close_handbook(self):
         """

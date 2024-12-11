@@ -4,6 +4,7 @@ import json
 
 
 class Handbook(Database):
+    """Controller for interacting with the handbook database and user queries"""
 
     def add_row(self, new_contact: dict):
         """
@@ -12,7 +13,6 @@ class Handbook(Database):
         :return:
         """
         self.contacts.append(new_contact)
-
 
     def find_rows(self, search_string: str, find_by_field="name") -> list:
         """
@@ -23,7 +23,6 @@ class Handbook(Database):
         """
         result = [contact for contact in self.contacts if search_string in contact[find_by_field]]
         return result
-
 
     def update_row(self, name: str, update_contact: dict) -> dict:
         """
@@ -37,7 +36,6 @@ class Handbook(Database):
                 contact.update(update_contact)
                 return contact
 
-
     def delete_row(self, name: str):
         """
         Removing an entry from the handbook
@@ -48,7 +46,6 @@ class Handbook(Database):
             if contact["name"] == name:
                 self.contacts.remove(contact)
                 return contact
-
 
     def compare(self) -> list:
         """
