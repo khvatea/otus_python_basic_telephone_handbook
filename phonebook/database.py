@@ -10,9 +10,27 @@ class Database:
          Writes a List object with contacts in dict format.
         :param file: JSON file containing phone book contact entries
         """
-        self.file = file
-        self.file_buff = "{}/buff.{}".format(pathlib.Path(file).parent.resolve() ,pathlib.Path(file).name)
+        self.__file = file
+        self.__file_buff = None
         self.contacts = []
+
+    @property
+    def file(self):
+        """
+        Get JSON file name
+        :return: a string containing the name of the JSON file
+        """
+        return self.__file
+
+    @property
+    def file_buff(self):
+        """
+                Get JSON buffer file name
+                :return: a string containing the name of the JSON buffer file
+                """
+        if self.__file_buff is None:
+            self.__file_buff = "{}/buff.{}".format(pathlib.Path(self.file).parent.resolve() ,pathlib.Path(self.file).name)
+        return self.__file_buff
 
     def open(self):
         """

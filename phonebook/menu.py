@@ -11,7 +11,11 @@ class Menu:
         Console menu for displaying and interacting with the telephone directory
         :param handbook: list of handbook entries
         """
-        self.handbook = handbook
+        self.__handbook = handbook
+
+    @property
+    def handbook(self):
+        return self.__handbook
 
     @staticmethod
     def show_pretty_table(sort_by_field="name", contacts=[]) -> str:

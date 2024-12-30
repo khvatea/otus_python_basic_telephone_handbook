@@ -1,5 +1,6 @@
 from phonebook import Handbook
 from phonebook import Menu
+import sys
 
 
 def main():
@@ -17,7 +18,12 @@ def main():
 
         # Select action and evaluate
         menu_user_choice = input("Введите номер действия: ")
-        menu_return_point = eval(f"menu.{menu_items[int(menu_user_choice)][1]}")
+        try:
+            menu_return_point = eval(f"menu.{menu_items[int(menu_user_choice)][1]}")
+        except KeyError:
+            sys.stdout.writelines("\033[31mУказан неверный пункт меню.\033[0m\n")
+        except ValueError:
+            sys.stdout.writelines("\033[31mНа ввод должно поступить целочисленное значение.\033[0m\n")
 
 
 if __name__ == "__main__":
